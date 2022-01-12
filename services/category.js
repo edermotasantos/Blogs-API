@@ -14,6 +14,12 @@ const createCategory = async ({ name }) => {
   return categoryCreated;
 };
 
+const listAllCategories = async () => {
+  const findAllCategories = Category.findAll({ raw: true });
+  return findAllCategories;
+};
+
 module.exports = {
-  createCategory,
+createCategory,
+listAllCategories,
 };

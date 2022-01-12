@@ -1,7 +1,7 @@
 const category = require('../services/category');
 const { tryAgainLater } = require('../schemas/messages');
 
-const { CREATED, INTERNAL_SERVER_ERROR } = require('../schemas/statusCodes');
+const { CREATED, OK, INTERNAL_SERVER_ERROR } = require('../schemas/statusCodes');
 
 const createCategory = async (req, res) => {
   try {
@@ -17,6 +17,16 @@ const createCategory = async (req, res) => {
   }
 };
 
+const listAllCategories = async (req, res) => {
+  try {
+    const findAllCategories = await category.listAllCategories();
+    return res.status(OK).json(findAllCategories);
+  } catch (error) {
+    res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
+  }
+};
+
 module.exports = {
   createCategory,
+  listAllCategories,
 };

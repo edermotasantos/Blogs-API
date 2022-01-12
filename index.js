@@ -1,6 +1,7 @@
 const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 app.use(express.json());
@@ -14,5 +15,6 @@ app.get('/', (request, response) => {
 
 app.use('/user', userRoutes);
 app.use('/login', loginRoutes);
+app.use('/categories', categoryRoutes);
 
 app.listen(PORT, () => console.log(`Server conected on port ${PORT}!`));

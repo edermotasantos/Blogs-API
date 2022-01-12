@@ -104,7 +104,7 @@ const listAllUsers = async () => {
 const listUserById = async (id) => {
   const foundUserById = await User.findByPk(id, { raw: true });
   if (!foundUserById) {
-      return { err: { statusCode: NOT_FOUND, message: userDoesntExist } };
+    return { err: { statusCode: NOT_FOUND, message: userDoesntExist } };
   }
   return foundUserById;
 };

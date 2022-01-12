@@ -17,6 +17,7 @@ const messages = {
     emailEmpty: '"email" is not allowed to be empty',
     passwordEmpty: '"password" is not allowed to be empty',
     invalidFields: 'Invalid fields',
+    nameIsRequired: '"name" is required',
   },
   401: {
     tokenNotFound: 'Token not found',
@@ -43,6 +44,7 @@ const {
     emailEmpty,
     passwordEmpty,
     invalidFields,
+    nameIsRequired,
   } = messages[BAD_REQUEST];
 
   const { userDoesntExist } = messages[NOT_FOUND];
@@ -68,4 +70,5 @@ module.exports = {
   invalidToken,
   userDoesntExist,
   tryAgainLater,
+  nameIsRequired,
 };  

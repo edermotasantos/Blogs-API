@@ -1,4 +1,10 @@
-const { BAD_REQUEST, CONFLICT, UNAUTHORIZED } = require('./statusCodes');
+const {
+  BAD_REQUEST,
+  CONFLICT,
+  UNAUTHORIZED,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+} = require('./statusCodes');
 
 const messages = {
   400: {
@@ -16,8 +22,14 @@ const messages = {
     tokenNotFound: 'Token not found',
     invalidToken: 'Expired or invalid token',
   },
+  404: {
+    userDoesntExist: 'User does not exist',
+  },  
   409: {
     userAlreadyExists: 'User already registered',
+  },
+  500: {
+    tryAgainLater: 'Something went wrong. Try again later',
   },
 };
 
@@ -32,10 +44,14 @@ const {
     passwordEmpty,
     invalidFields,
   } = messages[BAD_REQUEST];
+
+  const { userDoesntExist } = messages[NOT_FOUND];
   
   const { userAlreadyExists } = messages[CONFLICT];
 
   const { tokenNotFound, invalidToken } = messages[UNAUTHORIZED];
+
+  const { tryAgainLater } = messages[INTERNAL_SERVER_ERROR];
 
 module.exports = {
   nameLength,
@@ -50,4 +66,6 @@ module.exports = {
   userAlreadyExists,
   tokenNotFound,
   invalidToken,
+  userDoesntExist,
+  tryAgainLater,
 };  

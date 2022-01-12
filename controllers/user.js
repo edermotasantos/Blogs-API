@@ -1,16 +1,8 @@
 const user = require('../services/user');
 
-const OK = 200;
-const CREATED = 201;
-const INTERNAL_SERVER_err = 500;
+const { tryAgainLater } = require('../schemas/messages');
 
-const messages = {
-  500: {
-    tryAgainLater: 'Something went wrong. Try again later',
-  },
-};
-
-const { tryAgainLater } = messages[INTERNAL_SERVER_err];
+const { OK, CREATED, INTERNAL_SERVER_ERROR } = require('../schemas/statusCodes');
 
 const createUser = async (req, res) => {
   try {
@@ -22,7 +14,7 @@ const createUser = async (req, res) => {
     }
     return res.status(CREATED).json(userData);
   } catch (err) {
-    res.status(INTERNAL_SERVER_err).json({ message: tryAgainLater });
+    res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
   }
 };
 
@@ -36,16 +28,30 @@ const login = async (req, res) => {
     }
     return res.status(OK).json(loginData);
   } catch (err) {
-    res.status(INTERNAL_SERVER_err).json({ message: tryAgainLater });
+    res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
   }
 };
 
 const listAllUsers = async (req, res) => {
   try {
       const foundUsers = await user.listAllUsers();
-      return res.status(200).json(foundUsers);
+      return res.status(OK).json(foundUsers);
   } catch (err) {
-      res.status(500).json({ message: 'Something went wrong. Try again later' });
+      res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
+  }
+};
+
+const listUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const foundUserById = await user.listUserById(id);
+    if (foundUserById.err) {
+      const { statusCode, message } = foundUserById.err;
+      return res.status(statusCode).json({ message });
+    }
+    return res.status(OK).json(foundUserById);
+  } catch (err) {
+      res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
   }
 };
 
@@ -53,4 +59,5 @@ module.exports = {
   createUser,
   login,
   listAllUsers,
+  listUserById,
 };

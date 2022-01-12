@@ -11,9 +11,10 @@ const {
   passwordEmpty,
   invalidFields,
   userAlreadyExists,
+  userDoesntExist,
 } = require('../schemas/messages');
 
-const { BAD_REQUEST } = require('../schemas/statusCodes');
+const { BAD_REQUEST, NOT_FOUND } = require('../schemas/statusCodes');
 
 const createToken = (user, email) => {
   const jwtConfig = {
@@ -100,8 +101,17 @@ const listAllUsers = async () => {
   return usersFound;
 };
 
+const listUserById = async (id) => {
+  const foundUserById = await User.findByPk(id, { raw: true });
+  if (!foundUserById) {
+      return { err: { statusCode: NOT_FOUND, message: userDoesntExist } };
+  }
+  return foundUserById;
+};
+
 module.exports = {
   createUser,
   login,
   listAllUsers,
+  listUserById,
 };

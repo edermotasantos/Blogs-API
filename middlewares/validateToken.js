@@ -18,6 +18,7 @@ const validateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, jwtSecret);
     const { email } = decoded.data;
     const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).json({ message: invalidToken });
     next();
   } catch (error) {
     return res.status(UNAUTHORIZED).json({ message: invalidToken });

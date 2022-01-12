@@ -1,26 +1,5 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-
-const BAD_REQUEST = 400;
-const CONFLICT = 409;
-
-const messages = {
-  400: {
-    nameLength: '"displayName" length must be at least 8 characters long',
-    passwordLength: '"password" length must be 6 characters long',
-    emailIsRequired: '"email" is required',
-    passwordIsRequired: '"password" is required',
-    displayNameIsRequired: '"displayName" is required',
-    invalidEmail: '"email" must be a valid email',
-    emailEmpty: '"email" is not allowed to be empty',
-    passwordEmpty: '"password" is not allowed to be empty',
-    invalidFields: 'Invalid fields',
-  },
-  409: {
-    userAlreadyExists: 'User already registered',
-  },
-};
-
 const {
   nameLength,
   passwordLength,
@@ -31,13 +10,14 @@ const {
   emailEmpty,
   passwordEmpty,
   invalidFields,
-} = messages[BAD_REQUEST];
+  userAlreadyExists,
+} = require('../schemas/messages');
 
-const { userAlreadyExists } = messages[CONFLICT];
+const { BAD_REQUEST } = require('../schemas/statusCodes');
 
 const createToken = (user, email) => {
   const jwtConfig = {
-    expiresIn: '24h',
+    expiresIn: '7d',
     algorithm: 'HS256',
   };
   const { id } = user;
@@ -115,7 +95,13 @@ const login = async ({ email, password }) => {
   return { token };
 };
 
+const listAllUsers = async () => {
+  const usersFound = User.findAll({ raw: true });
+  return usersFound;
+};
+
 module.exports = {
   createUser,
   login,
+  listAllUsers,
 };

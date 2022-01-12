@@ -2,7 +2,7 @@ const user = require('../services/user');
 
 const OK = 200;
 const CREATED = 201;
-const INTERNAL_SERVER_ERROR = 500;
+const INTERNAL_SERVER_err = 500;
 
 const messages = {
   500: {
@@ -10,7 +10,7 @@ const messages = {
   },
 };
 
-const { tryAgainLater } = messages[INTERNAL_SERVER_ERROR];
+const { tryAgainLater } = messages[INTERNAL_SERVER_err];
 
 const createUser = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
     }
     return res.status(CREATED).json(userData);
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
+    res.status(INTERNAL_SERVER_err).json({ message: tryAgainLater });
   }
 };
 
@@ -35,12 +35,22 @@ const login = async (req, res) => {
       return res.status(statusCode).json({ message });
     }
     return res.status(OK).json(loginData);
-  } catch (error) {
-    res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
+  } catch (err) {
+    res.status(INTERNAL_SERVER_err).json({ message: tryAgainLater });
+  }
+};
+
+const listAllUsers = async (req, res) => {
+  try {
+      const foundUsers = await user.listAllUsers();
+      return res.status(200).json(foundUsers);
+  } catch (err) {
+      res.status(500).json({ message: 'Something went wrong. Try again later' });
   }
 };
 
 module.exports = {
   createUser,
   login,
+  listAllUsers,
 };

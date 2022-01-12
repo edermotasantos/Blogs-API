@@ -28,6 +28,9 @@ const {
   passwordIsRequired,
   displayNameIsRequired,
   invalidEmail,
+  emailEmpty,
+  passwordEmpty,
+  invalidFields,
 } = messages[BAD_REQUEST];
 
 const { userAlreadyExists } = messages[CONFLICT];
@@ -89,6 +92,30 @@ const createUser = async ({ email, password, displayName, image }) => {
   return { token };
 };
 
+const validateLoginData = (email, password) => {
+  if (email === '') return { err: { statusCode: BAD_REQUEST, message: emailEmpty } };
+  if (password === '') return { err: { statusCode: BAD_REQUEST, message: passwordEmpty } };
+  if (!email) return { err: { statusCode: BAD_REQUEST, message: emailIsRequired } };
+  if (!password) return { err: { statusCode: BAD_REQUEST, message: passwordIsRequired } };
+};
+
+const existentUser = (user, password) => {
+  if (!user || user.password !== password) {
+    return { err: { statusCode: BAD_REQUEST, message: invalidFields } };
+  }
+};
+
+const login = async ({ email, password }) => {
+  const loginData = validateLoginData(email, password);
+  if (loginData) return loginData;
+  const user = await User.findOne({ where: { email } });
+  const nonExistentUser = existentUser(user, password);
+  if (nonExistentUser) return nonExistentUser;
+  const token = createToken(user, email);
+  return { token };
+};
+
 module.exports = {
   createUser,
+  login,
 };

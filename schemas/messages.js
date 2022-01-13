@@ -18,6 +18,10 @@ const messages = {
     passwordEmpty: '"password" is not allowed to be empty',
     invalidFields: 'Invalid fields',
     nameIsRequired: '"name" is required',
+    titleIsRequired: '"title" is required',
+    contentIsRequired: '"content" is required',
+    categoryIdsIsRequired: '"categoryIds" is required',
+    categoryIdsNotFound: '"categoryIds" not found',
   },
   401: {
     tokenNotFound: 'Token not found',
@@ -45,7 +49,11 @@ const {
     passwordEmpty,
     invalidFields,
     nameIsRequired,
-  } = messages[BAD_REQUEST];
+    titleIsRequired,
+    contentIsRequired,
+    categoryIdsIsRequired,
+    categoryIdsNotFound,
+} = messages[BAD_REQUEST];
 
   const { userDoesntExist } = messages[NOT_FOUND];
   
@@ -71,4 +79,8 @@ module.exports = {
   userDoesntExist,
   tryAgainLater,
   nameIsRequired,
+  titleIsRequired,
+  contentIsRequired,
+  categoryIdsIsRequired,
+  categoryIdsNotFound,
 };  

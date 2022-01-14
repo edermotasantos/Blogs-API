@@ -22,13 +22,16 @@ const messages = {
     contentIsRequired: '"content" is required',
     categoryIdsIsRequired: '"categoryIds" is required',
     categoryIdsNotFound: '"categoryIds" not found',
+    categoriesCantBeEdited: 'Categories cannot be edited',
   },
   401: {
     tokenNotFound: 'Token not found',
     invalidToken: 'Expired or invalid token',
+    unauthorizedUser: 'Unauthorized user',
   },
   404: {
     userDoesntExist: 'User does not exist',
+    postDoesntExist: 'Post does not exist',
   },  
   409: {
     userAlreadyExists: 'User already registered',
@@ -53,13 +56,14 @@ const {
     contentIsRequired,
     categoryIdsIsRequired,
     categoryIdsNotFound,
+    categoriesCantBeEdited,
 } = messages[BAD_REQUEST];
 
-  const { userDoesntExist } = messages[NOT_FOUND];
+  const { userDoesntExist, postDoesntExist } = messages[NOT_FOUND];
   
   const { userAlreadyExists } = messages[CONFLICT];
 
-  const { tokenNotFound, invalidToken } = messages[UNAUTHORIZED];
+  const { tokenNotFound, invalidToken, unauthorizedUser } = messages[UNAUTHORIZED];
 
   const { tryAgainLater } = messages[INTERNAL_SERVER_ERROR];
 
@@ -83,4 +87,7 @@ module.exports = {
   contentIsRequired,
   categoryIdsIsRequired,
   categoryIdsNotFound,
+  postDoesntExist,
+  categoriesCantBeEdited,
+  unauthorizedUser,
 };  

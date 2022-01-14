@@ -4,12 +4,14 @@ const {
   contentIsRequired,
   categoryIdsIsRequired,
   categoryIdsNotFound,
+  categoriesCantBeEdited,
+  unauthorizedUser,
 } = require('../schemas/messages');
-const { BAD_REQUEST } = require('../schemas/statusCodes');
+const { BAD_REQUEST, UNAUTHORIZED } = require('../schemas/statusCodes');
 
 const ValidatePostData = (title, content) => {
-  if (!title) return { err: { code: BAD_REQUEST, message: titleIsRequired } };
-  if (!content) return { err: { code: BAD_REQUEST, message: contentIsRequired } };
+  if (!title) return { err: { statusCode: BAD_REQUEST, message: titleIsRequired } };
+  if (!content) return { err: { statusCode: BAD_REQUEST, message: contentIsRequired } };
 };
 
 const createPost = async ({ title, content, categoryIds, id }) => {
@@ -38,7 +40,32 @@ const listAllPosts = async () => {
   return allPostFound;
 };
 
+const listPostById = async (id) => {
+  const postFoundById = await BlogPost.findOne({
+      where: { id },
+      include: [
+        { model: User, as: 'user' },
+        { model: Category, as: 'categories' },
+      ],
+  });
+  return postFoundById;
+};
+
+const updatePostById = async ({ id, title, content, categoryIds, email }) => {
+  const postFound = await BlogPost.findOne({ where: { id }, include: [{ all: true }] });
+  if (categoryIds) {
+    return { err: { statusCode: BAD_REQUEST, message: categoriesCantBeEdited } };
+  }
+  if (postFound.dataValues.user.email !== email) {
+    return { err: { statusCode: UNAUTHORIZED, message: unauthorizedUser } };
+  }
+  const postFoundById = await postFound.update({ title, content }, { where: { id } });
+  return postFoundById;
+};
+
 module.exports = {
   createPost,
   listAllPosts,
+  listPostById,
+  updatePostById,
 };

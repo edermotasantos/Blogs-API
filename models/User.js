@@ -8,7 +8,7 @@ const User = (sequelize, DataTypes) => {
       timestamps: false,
   });
   user.associate = (models) => {
-      user.hasMany(models.BlogPost, { as: 'blogPosts', foreignKey: 'userId' }); // lazy loading
+      user.hasMany(models.BlogPost, { as: 'blogPosts', foreignKey: 'userId' });
   };
   return user;
 };

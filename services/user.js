@@ -24,6 +24,7 @@ const createToken = (user, email) => {
   const { id } = user;
   const data = { id, email };
   const token = jwt.sign({ data }, process.env.JWT_SECRET, jwtConfig);
+  console.log(`token ${ token }`);
   return token;
 };
 
@@ -64,6 +65,11 @@ const createUser = async ({ email, password, displayName, image }) => {
   const checkNameLength = validateNameLength(displayName);
   const checkPasswordLength = validatePasswordLength(password);
   const foundEmail = await findEmail(email);
+  console.log(`userData ${ userData.err.statusCode } `);
+  console.log(`checkNameLength ${ checkNameLength.err.statusCode }`);
+  console.log(`checkPasswordLength ${ checkPasswordLength.err.statusCode }`);
+  console.log(`foundEmail ${ foundEmail.err.statusCode }`);
+
   if (userData) return userData;
   if (checkNameLength) return checkNameLength;
   if (checkPasswordLength) return checkPasswordLength;

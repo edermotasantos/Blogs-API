@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
       return res.status(statusCode).json({ message });
     }
     return res.status(CREATED).json(userData);
-  } catch (err) {
+  } catch (error) {
     res.status(INTERNAL_SERVER_ERROR).json({ message: tryAgainLater });
   }
 };

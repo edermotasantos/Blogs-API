@@ -14,7 +14,7 @@ const {
   userDoesntExist,
 } = require('../schemas/messages');
 
-const { BAD_REQUEST, NOT_FOUND } = require('../schemas/statusCodes');
+const { BAD_REQUEST, NOT_FOUND, CONFLICT} = require('../schemas/statusCodes');
 
 const createToken = (user, email) => {
   const jwtConfig = {
@@ -24,7 +24,6 @@ const createToken = (user, email) => {
   const { id } = user;
   const data = { id, email };
   const token = jwt.sign({ data }, process.env.JWT_SECRET, jwtConfig);
-  console.log(`token ${ token }`);
   return token;
 };
 
@@ -50,30 +49,15 @@ const validateUserData = async (email, password, displayName) => {
   }
 };
 
-const findEmail = async (email) => {
-  const emailAlreadyExists = await User.findOne({ where: { email } });
-  if (emailAlreadyExists) return { err: { statusCode: BAD_REQUEST, message: userAlreadyExists } };
-};
-
-/**
- * Consultei o repositório do Nikolas Silva para resolver essa parte.
- * Link do repositório https://github.com/tryber/sd-011-project-blogs-api/pull/9/files
- */
-
 const createUser = async ({ email, password, displayName, image }) => {
   const userData = await validateUserData(email, password, displayName);
-  const checkNameLength = validateNameLength(displayName);
-  const checkPasswordLength = validatePasswordLength(password);
-  const foundEmail = await findEmail(email);
-  console.log(`userData ${ userData.err.statusCode } `);
-  console.log(`checkNameLength ${ checkNameLength.err.statusCode }`);
-  console.log(`checkPasswordLength ${ checkPasswordLength.err.statusCode }`);
-  console.log(`foundEmail ${ foundEmail.err.statusCode }`);
-
   if (userData) return userData;
+  const checkNameLength = validateNameLength(displayName);
   if (checkNameLength) return checkNameLength;
+  const checkPasswordLength = validatePasswordLength(password); 
   if (checkPasswordLength) return checkPasswordLength;
-  if (foundEmail) return foundEmail;
+  const emailAlreadyExists = await User.findOne({ where: { email } });
+  if (emailAlreadyExists) return { err: { statusCode: CONFLICT, message: userAlreadyExists } };
   const user = await User.create({ email, password, displayName, image });
   const token = createToken(user, email);
   return { token };

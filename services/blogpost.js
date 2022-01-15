@@ -57,6 +57,7 @@ const updatePostById = async ({ id, title, content, categoryIds, email }) => {
     return { err: { statusCode: BAD_REQUEST, message: categoriesCantBeEdited } };
   }
   if (postFound.dataValues.user.email !== email) {
+    // console.log(`unauthorizedUser ${unauthorizedUser}`);
     return { err: { statusCode: UNAUTHORIZED, message: unauthorizedUser } };
   }
   const postFoundById = await postFound.update({ title, content }, { where: { id } });

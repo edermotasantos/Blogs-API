@@ -19,6 +19,7 @@ const validateToken = async (req, res, next) => {
     const { email } = decoded.data;
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(401).json({ message: invalidToken });
+    req.user = user;
     next();
   } catch (error) {
     return res.status(UNAUTHORIZED).json({ message: invalidToken });

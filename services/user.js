@@ -14,7 +14,7 @@ const {
   userDoesntExist,
 } = require('../schemas/messages');
 
-const { BAD_REQUEST, NOT_FOUND, CONFLICT} = require('../schemas/statusCodes');
+const { BAD_REQUEST, NOT_FOUND, CONFLICT } = require('../schemas/statusCodes');
 
 const createToken = (user, email) => {
   const jwtConfig = {

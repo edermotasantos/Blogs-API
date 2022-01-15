@@ -49,11 +49,6 @@ const validateUserData = async (email, password, displayName) => {
   }
 };
 
-/**
- * Consultei o repositório do Nikolas Silva para resolver essa parte.
- * Link do repositório https://github.com/tryber/sd-011-project-blogs-api/pull/9/files
- */
-
 const createUser = async ({ email, password, displayName, image }) => {
   const userData = await validateUserData(email, password, displayName);
   if (userData) return userData;
@@ -61,7 +56,9 @@ const createUser = async ({ email, password, displayName, image }) => {
   if (checkNameLength) return checkNameLength;
   const checkPasswordLength = validatePasswordLength(password); 
   if (checkPasswordLength) return checkPasswordLength;
+
   const emailAlreadyExists = await User.findOne({ where: { email } });
+  console.log(emailAlreadyExists);
   if (emailAlreadyExists) return { err: { statusCode: CONFLICT, message: userAlreadyExists } };
   const user = await User.create({ email, password, displayName, image });
   const token = createToken(user, email);

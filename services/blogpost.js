@@ -9,18 +9,13 @@ const {
 } = require('../schemas/messages');
 const { BAD_REQUEST, UNAUTHORIZED } = require('../schemas/statusCodes');
 
-const ValidatePostData = (title, content) => {
+const createPost = async ({ title, content, categoryIds, id }) => {
   if (!title) return { err: { statusCode: BAD_REQUEST, message: titleIsRequired } };
   if (!content) return { err: { statusCode: BAD_REQUEST, message: contentIsRequired } };
-};
-
-const createPost = async ({ title, content, categoryIds, id }) => {
-  const postData = ValidatePostData(title, content);
-  if (postData) return postData;
-  if (!categoryIds) return { err: { code: BAD_REQUEST, message: categoryIdsIsRequired } };
+  if (!categoryIds) return { err: { statusCode: BAD_REQUEST, message: categoryIdsIsRequired } };
   const allPostsFoundByCategory = await Category.findAll({ where: { id: categoryIds } });
   if (allPostsFoundByCategory.length !== categoryIds.length) {
-    return { err: { code: BAD_REQUEST, message: categoryIdsNotFound } };
+    return { err: { statusCode: BAD_REQUEST, message: categoryIdsNotFound } };
   }
   const postCreated = await BlogPost.create({ title, content, userId: id });
   const postFound = await BlogPost.findByPk(postCreated.dataValues.id, {

@@ -19,6 +19,7 @@ const createPost = async (req, res) => {
     const { title, content, categoryIds } = req.body;
     const { id } = req.user;
     const postData = await blogPost.createPost({ title, content, categoryIds, id });
+   
     if (postData.err) {
       const { statusCode, message } = postData.err;
       return res.status(statusCode).json({ message });
